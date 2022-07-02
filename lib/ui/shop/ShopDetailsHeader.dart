@@ -15,9 +15,9 @@ class ShopDetailsHeader extends StatefulWidget {
   final ShopDetailsDataModel shopDetailsDataModel;
   final String shop_id, shop_cat_id;
   bool? IsFavorite;
-
+  VoidCallback likebuttonclick;
   ShopDetailsHeader(this.shopDetailsDataModel, this.shop_id, this.shop_cat_id,
-      this.IsFavorite);
+      this.IsFavorite, this.likebuttonclick);
 
   @override
   State<ShopDetailsHeader> createState() => _ShopDetailsHeaderState();
@@ -141,7 +141,11 @@ class _ShopDetailsHeaderState extends State<ShopDetailsHeader> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(5.0)),
                             child: Container(
-                              color: MainColor,
+                              color: widget.shopDetailsDataModel.shopDetails!
+                                          .shop_isopened ==
+                                      true
+                                  ? MainColor
+                                  : RedColor,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 15),
@@ -191,10 +195,10 @@ class _ShopDetailsHeaderState extends State<ShopDetailsHeader> {
 
   Widget ShopTag() {
     String ShopStatus;
-    if (widget.shopDetailsDataModel.shopDetails!.isOpened == true) {
+    if (widget.shopDetailsDataModel.shopDetails!.shop_isopened == true) {
       ShopStatus = "Open";
     } else {
-      ShopStatus = "CLose";
+      ShopStatus = "Close";
     }
     return Text(
       ShopStatus,
@@ -221,6 +225,7 @@ class _ShopDetailsHeaderState extends State<ShopDetailsHeader> {
     response = await ApiCalling.post(MANAGE_WISHLIST, data: Params);
 
     setState(() {
+      widget.likebuttonclick();
       widget.IsFavorite = response.data["is_wishlist"];
       print("responseresponseresponse${response.data.toString()}");
       if (response.data[status] != true) {

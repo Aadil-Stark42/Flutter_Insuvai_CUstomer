@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:insuvaicustomer/alertdialog/rflutter_alert.dart';
 
 import 'package:insuvaicustomer/apiservice/EndPoints.dart';
 import 'package:insuvaicustomer/models/ShopProductDataModel.dart';
@@ -31,8 +32,10 @@ import 'ShopReviewScreen.dart';
 
 class ShopDetailsScreen extends StatefulWidget {
   final String shop_id, shop_cat_id, product_name;
+  VoidCallback likebuttonclick;
 
-  ShopDetailsScreen(this.shop_id, this.shop_cat_id, this.product_name);
+  ShopDetailsScreen(
+      this.shop_id, this.shop_cat_id, this.product_name, this.likebuttonclick);
 
   @override
   ShopDetailsScreenState createState() => ShopDetailsScreenState();
@@ -98,7 +101,8 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
                 shopDetailsDataModel,
                 widget.shop_id,
                 widget.shop_cat_id,
-                shopDetailsDataModel.shopDetails!.isWishlist),
+                shopDetailsDataModel.shopDetails!.isWishlist,
+                widget.likebuttonclick),
             SliverList(
                 delegate: SliverChildListDelegate([
               SizedBox(
@@ -285,10 +289,11 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
                       height: 0.5,
                       color: GreyColor2,
                     ),
+                    CouponListview(),
                     SizedBox(
                       height: 10,
                     ),
-                    /*-------*/
+                    /*---TabVIew----*/
                     Container(
                       height: MediaQuery.of(context).size.height / 1.7,
                       width: MediaQuery.of(context).size.width,
@@ -353,7 +358,7 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
     response = await ApiCalling.post(PRODUCTS, data: Params);
     setState(() {
       shopDetailsDataModel = ShopDetailsDataModel.fromJson(response.data);
-
+      IsBottomCartShow = shopDetailsDataModel.shopDetails!.isCart;
       print("responseresponseresponse${response.data.toString()}");
       if (shopDetailsDataModel.status != true) {
         ShowToast(shopDetailsDataModel.message.toString(), context);
@@ -516,7 +521,6 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
                               ),
                               Text(
                                 shopProductsList[index].description.toString(),
-                                maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 13,
@@ -895,5 +899,149 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
                 ),
               ));
         });
+  }
+
+  Widget CouponListview() {
+    print("CuponsList" + shopDetailsDataModel.coupons!.length.toString());
+    if (shopDetailsDataModel.coupons!.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 50,
+            child: AnimationLimiter(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: shopDetailsDataModel.coupons!.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) {
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: Duration(milliseconds: AnimationTime),
+                    child: SlideAnimation(
+                      horizontalOffset: 50.0,
+                      child: FadeInAnimation(
+                          child: InkWell(
+                        onTap: () {
+                          ShowLongToast(
+                              shopDetailsDataModel
+                                      .coupons![index].couponDescription
+                                      .toString() +
+                                  "  (Coupon copied)",
+                              context);
+                          Clipboard.setData(ClipboardData(
+                              text: shopDetailsDataModel
+                                  .coupons![index].couponCode
+                                  .toString()));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: index != 0 ? 10 : 0),
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Container(
+                              width: 180,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        IMAGE_PATH + "coupon_bg.png",
+                                        width: 28,
+                                        height: 28,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              shopDetailsDataModel
+                                                  .coupons![index]
+                                                  .couponDescription
+                                                  .toString(),
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: true,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  height: 1.0,
+                                                  fontFamily: Segoe_ui_semibold,
+                                                  color: BlackColor),
+                                            ),
+                                            SizedBox(
+                                              height: 3,
+                                            ),
+                                            FittedBox(
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "use code ",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        height: 1.0,
+                                                        fontFamily:
+                                                            Segoe_ui_semibold,
+                                                        color: BlackColor),
+                                                  ),
+                                                  Text(
+                                                    shopDetailsDataModel
+                                                        .coupons![index]
+                                                        .couponCode
+                                                        .toString(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        height: 1.0,
+                                                        fontFamily:
+                                                            Segoe_ui_semibold,
+                                                        color: BlackColor),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 }

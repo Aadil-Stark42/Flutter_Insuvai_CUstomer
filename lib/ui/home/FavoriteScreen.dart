@@ -1,33 +1,23 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:insuvaicustomer/apiservice/EndPoints.dart';
 import 'package:insuvaicustomer/res/ResColor.dart';
 import 'package:insuvaicustomer/uicomponents/MyProgressBar.dart';
 import 'package:insuvaicustomer/utils/LocalStorageName.dart';
-import 'package:permission_handler/permission_handler.dart' as permis;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../animationlist/src/animation_configuration.dart';
 import '../../animationlist/src/animation_limiter.dart';
 import '../../animationlist/src/fade_in_animation.dart';
-import '../../animationlist/src/scale_animation.dart';
 import '../../animationlist/src/slide_animation.dart';
 import '../../apiservice/ApiService.dart';
 import '../../apiservice/EndPoints.dart';
-import '../../imageslider/carousel_slider.dart';
-import '../../models/DashBoardDataModell.dart';
 import '../../models/WishListDataModel.dart';
 import '../../res/ResString.dart';
-import '../../uicomponents/progress_button.dart';
 import '../../utils/Utils.dart';
 import '../shop/ShopDetailsScreen.dart';
-import 'homesubscreen/CartSubScreen.dart';
-import 'homesubscreen/CategorySearchScreen.dart';
-import 'homesubscreen/HomeSubScreen.dart';
-import 'homesubscreen/ProfileScreen.dart';
+import 'AppMaintainanceScreen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   @override
@@ -115,7 +105,28 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                       padding:
                           const EdgeInsets.only(top: 10, left: 15, right: 10),
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          if (CHECKAPPSTATUS == STATUSNUMBER) {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      AppMaintainanceScreen(true)),
+                            );
+                          } else {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ShopDetailsScreen(
+                                          wishListDataModel.shops![index].shopId
+                                              .toString(),
+                                          "14",
+                                          wishListDataModel
+                                              .shops![index].shopName
+                                              .toString(), () {
+                                        GetWishList();
+                                      })),
+                            );
+                          }
+                        },
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,

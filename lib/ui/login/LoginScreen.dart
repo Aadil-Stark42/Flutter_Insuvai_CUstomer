@@ -15,6 +15,7 @@ import '../../main.dart';
 import '../../uicomponents/progress_button.dart';
 import '../../uicomponents/rounded_button.dart';
 import '../../uicomponents/rounded_input_field.dart';
+import '../../utils/LowerCaseTextFormatter.dart';
 import 'OtpScreen.dart';
 import 'components/background.dart';
 
@@ -61,28 +62,28 @@ class LoginScreenState extends State<MyLoginUi> {
               ),
               SizedBox(height: 50),
               RoundedInputField(
-                hintText: EnterNameHint,
-                onChanged: (value) {
-                  UserName = value;
-                },
-                inputType: TextInputType.name,
-                icon: Icons.account_circle,
-                Corner_radius: Full_Rounded_Button_Corner,
-                horizontal_margin: 20,
-                elevations: 1,
-              ),
+                  hintText: EnterNameHint,
+                  onChanged: (value) {
+                    UserName = value;
+                  },
+                  inputType: TextInputType.name,
+                  icon: Icons.account_circle,
+                  Corner_radius: Full_Rounded_Button_Corner,
+                  horizontal_margin: 20,
+                  elevations: 1,
+                  formatter: LowerCaseTextFormatter()),
               SizedBox(height: 10),
               RoundedInputField(
-                hintText: EnterMobileHint,
-                onChanged: (value) {
-                  MobileNumber = value;
-                },
-                inputType: TextInputType.number,
-                icon: Icons.phone,
-                Corner_radius: Full_Rounded_Button_Corner,
-                horizontal_margin: 20,
-                elevations: 1,
-              ),
+                  hintText: EnterMobileHint,
+                  onChanged: (value) {
+                    MobileNumber = value;
+                  },
+                  inputType: TextInputType.number,
+                  icon: Icons.phone,
+                  Corner_radius: Full_Rounded_Button_Corner,
+                  horizontal_margin: 20,
+                  elevations: 1,
+                  formatter: LowerCaseTextFormatter()),
               SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),

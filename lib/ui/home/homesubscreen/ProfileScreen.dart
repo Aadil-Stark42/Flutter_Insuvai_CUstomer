@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:insuvaicustomer/main.dart';
 
 import 'package:insuvaicustomer/res/ResColor.dart';
@@ -191,6 +192,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    /* _launchUrl();*/
                     Navigator.of(context, rootNavigator: true)
                         .push(MaterialPageRoute(
                       builder: (context) =>
@@ -222,6 +224,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    /*_launchUrlPrivacy();*/
                     Navigator.of(context, rootNavigator: true)
                         .push(MaterialPageRoute(
                       builder: (context) =>
@@ -551,7 +554,20 @@ class ProfileScreenState extends State<ProfileScreen> {
     Navigator.of(context, rootNavigator: true).pop('dialog');
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const MyApp()),
+        MaterialPageRoute(builder: (context) => MySplashScreenPage()),
         (Route<dynamic> route) => false);
+  }
+
+  void _launchUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (!await launchUrl(
+        Uri.parse(prefs.getString(TERMS_CONDITION).toString())))
+      throw 'Could not launch $prefs.getString(TERMS_CONDITION)';
+  }
+
+  void _launchUrlPrivacy() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (!await launchUrl(Uri.parse(prefs.getString(PRIVACY_POLICY).toString())))
+      throw 'Could not launch $prefs.getString(TERMS_CONDITION)';
   }
 }

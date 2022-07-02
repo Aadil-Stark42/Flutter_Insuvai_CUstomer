@@ -426,6 +426,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
     String House = result.formattedAddress.toString();
     String LandMark = "";
+    print("HouseHouseHouseHouseHouse $House");
     String Delivery_Type = "";
     return StatefulBuilder(builder:
         (BuildContext context, StateSetter setState /*You can rename this!*/) {
@@ -462,13 +463,12 @@ class GoogleMapPlacePicker extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Container(
-              height: 45,
-              child: TextField(
+              child: TextFormField(
                 onChanged: (value) {
                   House = value;
                 },
-                controller: TextEditingController()
-                  ..text = result.formattedAddress.toString(),
+                initialValue: House,
+                /*controller: TextEditingController()..text = House.toString(),*/
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                       borderSide: BorderSide(color: MainColor)),

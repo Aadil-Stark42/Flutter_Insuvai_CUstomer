@@ -26,8 +26,10 @@ import '../../utils/Utils.dart';
 class OrderConfirmationScreen extends StatefulWidget {
   final OrderConfirmDataModel orderConfirmDataModel;
   final String GstPer;
+  final String distance_km;
 
-  OrderConfirmationScreen(this.orderConfirmDataModel, this.GstPer);
+  OrderConfirmationScreen(
+      this.orderConfirmDataModel, this.GstPer, this.distance_km);
 
   @override
   OrderConfirmationScreenState createState() => OrderConfirmationScreenState();
@@ -283,7 +285,7 @@ class OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      DeliveryChargesTag,
+                      CouponDiscount,
                       style: TextStyle(
                         fontFamily: Poppinsmedium,
                         fontSize: 12,
@@ -292,7 +294,7 @@ class OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                       ),
                     ),
                     Text(
-                      "₹${widget.orderConfirmDataModel.priceDetails!.deliveryCharge}",
+                      "₹${widget.orderConfirmDataModel.priceDetails!.couponDiscount}",
                       style: TextStyle(
                         fontFamily: Poppinsmedium,
                         fontSize: 13,
@@ -364,7 +366,7 @@ class OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      CouponDiscount,
+                      DeliveryChargesTag,
                       style: TextStyle(
                         fontFamily: Poppinsmedium,
                         fontSize: 12,
@@ -373,7 +375,10 @@ class OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                       ),
                     ),
                     Text(
-                      "₹${widget.orderConfirmDataModel.priceDetails!.couponDiscount}",
+                      "(" +
+                          widget.distance_km.toString() +
+                          ") " +
+                          "₹${widget.orderConfirmDataModel.priceDetails!.deliveryCharge}",
                       style: TextStyle(
                         fontFamily: Poppinsmedium,
                         fontSize: 13,

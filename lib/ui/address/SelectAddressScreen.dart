@@ -25,6 +25,7 @@ class SelectAddressScreen extends StatefulWidget {
   final bool IsJustChangeAddress;
   final String GstPer;
   final bool IsForCart;
+
   SelectAddressScreen(this.IsJustChangeAddress, this.GstPer, this.IsForCart);
 
   @override
@@ -41,6 +42,7 @@ class SelectAddressScreenState extends State<SelectAddressScreen> {
   String ClickedImage = "${IMAGE_PATH}unselect_button.png";
   int selectedIndex = 0;
   String SelectedAddressId = "";
+
   @override
   void initState() {
     super.initState();
@@ -243,7 +245,7 @@ class SelectAddressScreenState extends State<SelectAddressScreen> {
           apiKey: Platform.isAndroid ? MAP_API_KEY : "YOUR IOS API KEY",
           onPlacePicked: (result) {
             print(result.formattedAddress);
-            Navigator.of(context).pop();
+            Navigator.pop(context);
             GetAddressList();
           },
           IsComeFromHome: false,

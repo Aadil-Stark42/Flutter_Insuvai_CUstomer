@@ -31,7 +31,7 @@ var HintName = "Name";
 var MobileNumber = "Mobile Number";
 var SearchProduct = "Search Product";
 var instructions = "Do you have any instructions?";
-var CouponCode = "Enter coupon code";
+var CouponCode = "Enter shop coupon code";
 var LANDMARK = "LANDMARK (optional)";
 var ADDRESSHINT = "Enter address here";
 var Verify = "Verify";
@@ -150,6 +150,10 @@ var CHECKAPPSTATUS = "CHECK APP STATUS";
 var STATUSNUMBER = "0";
 var yourcartcontain =
     "Your cart contains items from Shop 1. Do you want to clear the cart and add items from Shop 2";
+var howdoyourate = "How do you rate our delivery boy?";
+var Yourfeedbackwill =
+    "Your feedback will help us improve delivery experience better.";
+var Confirmss = "Confirm";
 /*--------------------*/
 
 /*Animation Tim*/

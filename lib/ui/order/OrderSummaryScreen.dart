@@ -1,11 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:insuvaicustomer/models/PaytmResponse.dart';
+import 'package:insuvaicustomer/models/ShopDetailsDataModel.dart';
+import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:insuvaicustomer/apiservice/EndPoints.dart';
-import 'package:insuvaicustomer/models/OrderDetailsDataModel.dart';
 import 'package:insuvaicustomer/res/ResColor.dart';
 import 'package:insuvaicustomer/ui/order/OrderConfirmationScreen.dart';
 import 'package:insuvaicustomer/utils/LocalStorageName.dart';
@@ -16,11 +22,17 @@ import '../../../apiservice/ApiService.dart';
 import '../../../apiservice/EndPoints.dart';
 import '../../../res/ResString.dart';
 import '../../../uicomponents/MyProgressBar.dart';
+import '../../animationlist/src/animation_configuration.dart';
+import '../../animationlist/src/animation_limiter.dart';
+import '../../animationlist/src/fade_in_animation.dart';
+import '../../animationlist/src/slide_animation.dart';
 import '../../models/OrderConfirmDataModel.dart';
 import '../../models/OrderSummaryDataModel.dart';
 import '../../uicomponents/RoundedBorderButton.dart';
 import '../../uicomponents/progress_button.dart';
 import '../../uicomponents/rounded_button.dart';
+import '../../uicomponents/rounded_input_field.dart';
+import '../../utils/UpperCaseTextFormatter.dart';
 import '../../utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -38,15 +50,19 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
   bool IsCashOnDeliveryCLick = false;
   bool IsOnlineCLick = false;
   String Payment_Method = "";
-  String razor_signature = "";
-  String razor_payment_id = "";
-  String razor_order_id = "";
+  String paytm_checkshum = "";
+  String paytm_order_id = "";
+  String paytm_txn_id = "";
   final Razorpay _razorpay = Razorpay();
   bool IsLoadingPayment = false;
+  String CouponValue = "";
+  ButtonState buttonState = ButtonState.normal;
+
   @override
   void initState() {
     super.initState();
-    GetOrderSummaryDetails();
+    Firebase.initializeApp();
+    GetOrderSummaryDetails("");
   }
 
   @override
@@ -123,9 +139,9 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
     _razorpay.clear();
-    razor_signature = response.signature.toString();
-    razor_payment_id = response.paymentId.toString();
-    razor_order_id = response.orderId.toString();
+    paytm_checkshum = response.signature.toString();
+    paytm_order_id = response.paymentId.toString();
+    paytm_txn_id = response.orderId.toString();
     OrderConfirmation();
   }
 
@@ -143,20 +159,31 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
     // Do something when an external wallet was selected
   }
 
-  Future<void> GetOrderSummaryDetails() async {
+  Future<void> GetOrderSummaryDetails(String coupon) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var header = <String, dynamic>{};
     String? token = prefs.getString(TOKEN);
     header[Authorization] = Bearer + token.toString();
     print("HEADERSSS${header.toString()}");
     var Params = <String, dynamic>{};
-    Params[address_id] =widget.Temp_Address_id;
+    Params[address_id] = widget.Temp_Address_id;
+    Params[coupon_code] = coupon;
     var ApiCalling = GetApiInstanceWithHeaders(header);
     Response response;
     response = await ApiCalling.post(ORDER_SUMMARY, data: Params);
     print("GetOrderSummaryDetailsRESPONSEE${response.data.toString()}");
+    if (coupon.isNotEmpty) {
+      ShowToast(response.data[message], context);
+    }
     setState(() {
-      _orderSummaryDataModel = OrderSummaryDataModel.fromJson(response.data);
+      if (OrderSummaryDataModel.fromJson(response.data).items!.isNotEmpty) {
+        _orderSummaryDataModel = OrderSummaryDataModel.fromJson(response.data);
+        /*     List<Coupons> list = [];
+        list.add(Coupons(
+            couponCode: "MYFLAT",
+            couponDescription: "FLAT 505 off this Offers"));
+        _orderSummaryDataModel.coupons = list;*/
+      }
     });
   }
 
@@ -172,9 +199,9 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
       Params[payment_type] = "0";
     } else {
       Params[payment_type] = "1";
-      Params[razorpay_signature] = razor_signature;
-      Params[razorpay_payment_id] = razor_payment_id;
-      Params[razorpay_order_id] = razor_order_id;
+      Params[razorpay_signature] = paytm_checkshum;
+      Params[razorpay_payment_id] = paytm_order_id;
+      Params[razorpay_order_id] = paytm_txn_id;
     }
 
     var ApiCalling = GetApiInstanceWithHeaders(header);
@@ -185,6 +212,8 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
       IsLoadingPayment = false;
     });
     ShowToast(response.data[message], context);
+    print(
+        "OrderConfirmationresponsemessagemessage${response.data[message].toString()}");
     if (response.data[status]) {
       OrderConfirmDataModel orderConfirmDataModel =
           OrderConfirmDataModel.fromJson(response.data);
@@ -197,7 +226,9 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => OrderConfirmationScreen(
-                  orderConfirmDataModel, widget.GstPer)),
+                  orderConfirmDataModel,
+                  widget.GstPer,
+                  _orderSummaryDataModel.priceDetails!.distance_km.toString())),
           (Route<dynamic> route) => false);
     }
   }
@@ -305,7 +336,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                         height: 10,
                       ),
                       Text(
-                        OrderConfirmed,
+                        OrderNumber,
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: Segoe_ui_semibold,
@@ -385,6 +416,71 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  "Use delivery coupons here",
+                  style: TextStyle(
+                      fontSize: 17, fontFamily: Inter_bold, color: BlackColor),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(3.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: GreyColor2),
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                          child: RoundedInputField(
+                        hintText: "Use INSUVAI Coupons",
+                        onChanged: (value) {
+                          CouponValue = value.toUpperCase();
+                        },
+                        icon: Icons.airplane_ticket_outlined,
+                        Corner_radius: 0,
+                        horizontal_margin: 0,
+                        elevations: 0,
+                        formatter: UpperCaseTextFormatter(),
+                        inputType: TextInputType.text,
+                      )),
+                      Container(
+                        width: 80,
+                        height: 45,
+                        child: ProgressButton(
+                          child: Text(
+                            APPLY,
+                            style: TextStyle(
+                              color: WhiteColor,
+                              fontFamily: Segoe_ui_semibold,
+                              height: 1.1,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (CouponValue.isNotEmpty) {
+                              GetOrderSummaryDetails(CouponValue);
+                            } else {
+                              ShowToast("Please enter coupon code", context);
+                            }
+                          },
+                          buttonState: buttonState,
+                          backgroundColor: MainColor,
+                          progressColor: WhiteColor,
+                          border_radius: Rounded_Button_Corner,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3,
+                      )
+                    ],
+                  ),
+                ),
+                CouponListview(),
                 SizedBox(
                   height: 25,
                 ),
@@ -487,7 +583,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DeliveryChargesTag,
+                          CouponDiscount,
                           style: TextStyle(
                             fontFamily: Poppinsmedium,
                             fontSize: 12,
@@ -496,7 +592,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                           ),
                         ),
                         Text(
-                          "₹${_orderSummaryDataModel.priceDetails!.deliveryCharge}",
+                          "₹${_orderSummaryDataModel.priceDetails!.couponDiscount}",
                           style: TextStyle(
                             fontFamily: Poppinsmedium,
                             fontSize: 13,
@@ -568,7 +664,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          CouponDiscount,
+                          DeliveryChargesTag,
                           style: TextStyle(
                             fontFamily: Poppinsmedium,
                             fontSize: 12,
@@ -577,7 +673,11 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                           ),
                         ),
                         Text(
-                          "₹${_orderSummaryDataModel.priceDetails!.couponDiscount}",
+                          "(" +
+                              _orderSummaryDataModel.priceDetails!.distance_km
+                                  .toString() +
+                              ") " +
+                              "₹${_orderSummaryDataModel.priceDetails!.deliveryCharge}",
                           style: TextStyle(
                             fontFamily: Poppinsmedium,
                             fontSize: 13,
@@ -665,12 +765,19 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
 
   Future<void> GetTokenForPayment() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? fcm_token = await FirebaseMessaging.instance.getToken();
     var header = <String, dynamic>{};
     String? token = prefs.getString(TOKEN);
     header[Authorization] = Bearer + token.toString();
     print("HEADERSSS${header.toString()}");
     var Params = <String, dynamic>{};
     Params[order_id] = _orderSummaryDataModel.orderDetails!.orderId.toString();
+    Params[order_amount] = _orderSummaryDataModel.priceDetails!.total
+        .toString()
+        .replaceAll(",", "")
+        .replaceAll(".", "");
+    Params[customer_id] = fcm_token;
+    print("GetTokenForPaymentParamsParamsParams${Params.toString()}");
     var ApiCalling = GetApiInstanceWithHeaders(header);
     Response response;
     response = await ApiCalling.post(PAYMENT_INITIATE, data: Params);
@@ -679,10 +786,230 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
       IsLoadingPayment = false;
     });
     if (response.data[status]) {
-      OnlinePaymentStart(response.data[RAZOR_API_KEY].toString(),
-          response.data[order_id].toString());
+      /*TestingPayment();*/
+      PaytmPaymentStart(response.data["token"], response.data["mid"],
+          response.data["order_id"]);
     } else {
       ShowToast(response.data[message], context);
     }
+  }
+
+  void PaytmPaymentStart(token, mid, order_id) {
+    String host = "https://securegw.paytm.in/";
+    String callBackUrl = host + "theia/paytmCallback?ORDER_ID=" + order_id;
+    try {
+      var response = AllInOneSdk.startTransaction(
+          mid,
+          order_id,
+          _orderSummaryDataModel.priceDetails!.total.toString(),
+          token,
+          callBackUrl,
+          false,
+          true);
+      /* response.then((value) {
+        print(value);
+        setState(() {
+          result = value.toString();
+        });*/
+      response.then((value) {
+        if (value != null) {
+          if (value["STATUS"]?.toString() == "TXN_SUCCESS") {
+            paytm_checkshum = value["CHECKSUMHASH"].toString();
+            paytm_order_id = value["ORDERID"].toString();
+            paytm_txn_id = value["TXNID"].toString();
+            OrderConfirmation();
+          } else {
+            ShowToast(value["RESPMSG"].toString(), context);
+            print("resultresultresultresultPAYMENTNOT01" +
+                value["RESPMSG"].toString());
+          }
+        }
+      }).catchError((onError) {
+        if (onError is PlatformException) {
+          print("resultresultresultresultPAYMENTPlatformException" +
+              onError.message! +
+              " \n  " +
+              onError.details.toString());
+          ShowToast(onError.message.toString(), context);
+        } else {
+          ShowToast(onError.toString(), context);
+          print("resultresultresultresultPAYMENTonError.toString" +
+              onError.toString());
+        }
+      });
+    } catch (err) {
+      print("resultresultresultresultPAYMENT" + err.toString());
+      ShowToast(err.toString(), context);
+    }
+  }
+
+  Widget CouponListview() {
+    print("CuponsList" + _orderSummaryDataModel.coupons!.length.toString());
+    if (_orderSummaryDataModel.coupons!.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 50,
+            child: AnimationLimiter(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: _orderSummaryDataModel.coupons!.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) {
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: Duration(milliseconds: AnimationTime),
+                    child: SlideAnimation(
+                      horizontalOffset: 50.0,
+                      child: FadeInAnimation(
+                          child: InkWell(
+                        onTap: () {
+                          ShowLongToast(
+                              _orderSummaryDataModel
+                                      .coupons![index].couponDescription
+                                      .toString() +
+                                  "  (Coupon copied)",
+                              context);
+                          Clipboard.setData(ClipboardData(
+                              text: _orderSummaryDataModel
+                                  .coupons![index].couponCode
+                                  .toString()));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: index != 0 ? 10 : 0),
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Container(
+                              width: 180,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        IMAGE_PATH + "coupon_bg.png",
+                                        width: 28,
+                                        height: 28,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _orderSummaryDataModel
+                                                  .coupons![index]
+                                                  .couponDescription
+                                                  .toString(),
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: true,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  height: 1.0,
+                                                  fontFamily: Segoe_ui_semibold,
+                                                  color: BlackColor),
+                                            ),
+                                            SizedBox(
+                                              height: 3,
+                                            ),
+                                            FittedBox(
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "use code ",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        height: 1.0,
+                                                        fontFamily:
+                                                            Segoe_ui_semibold,
+                                                        color: BlackColor),
+                                                  ),
+                                                  Text(
+                                                    _orderSummaryDataModel
+                                                        .coupons![index]
+                                                        .couponCode
+                                                        .toString(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        height: 1.0,
+                                                        fontFamily:
+                                                            Segoe_ui_semibold,
+                                                        color: BlackColor),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  void TestingPayment() {
+    var value = <dynamic, dynamic>{};
+    value["CURRENCY"] = "INR";
+    value["GATEWAYNAME"] = "PPBL";
+    value["RESPMSG"] = "Txn Success";
+    value["PAYMENTMODE"] = "UPI";
+    value["MID"] = "qqUMXL75442270455952";
+    value["RESPCODE"] = 01;
+    value["TXNAMOUNT"] = 36.00;
+    value["TXNID"] = "20220531111212800110168874954864568";
+    value["ORDERID"] = "349020220531000725";
+    value["STATUS"] = "TXN_SUCCESS";
+    value["BANKTXNID"] = 215117170839;
+    value["TXNDATE"] = "2022-05-31 00:07:26.0";
+    value["CHECKSUMHASH"] =
+        "vmhrHzl+FzxzS+sRzY3uM/ES4HTNqSmJu/Rrd4VYbSmEeHQxcy1NZYABiAveA95j+Q0tevI40BBqgoknItVPgBMDNr71lFRCfc45GEZlYSQ=";
+
+    if (value["STATUS"].toString() == "TXN_SUCCESS") {
+      paytm_checkshum = value["CHECKSUMHASH"].toString();
+      paytm_order_id = value["ORDERID"].toString();
+      paytm_txn_id = value["TXNID"].toString();
+    }
+    ShowToast(value["RESPMSG"].toString(), context);
+    print("resultresultresultresultPAYMENTNOT01" + value["RESPMSG"].toString());
   }
 }

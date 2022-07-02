@@ -4,13 +4,14 @@ class ShopDetailsDataModel {
   ShopDetails? shopDetails;
   List<Categories>? categories;
   List<ShopProducts>? shopProducts;
-
+  List<Coupons>? coupons = [];
   ShopDetailsDataModel(
       {this.status,
       this.message,
       this.shopDetails,
       this.categories,
-      this.shopProducts});
+      this.shopProducts,
+      this.coupons});
 
   ShopDetailsDataModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -30,6 +31,12 @@ class ShopDetailsDataModel {
         shopProducts!.add(new ShopProducts.fromJson(v));
       });
     }
+    if (json['coupons'] != null) {
+      coupons = <Coupons>[];
+      json['coupons'].forEach((v) {
+        coupons!.add(new Coupons.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +53,90 @@ class ShopDetailsDataModel {
       data['shop_products'] =
           this.shopProducts!.map((v) => v.toJson()).toList();
     }
+    if (this.coupons != null) {
+      data['coupons'] = this.coupons!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Coupons {
+  int? id;
+  String? couponCode;
+  String? expiredOn;
+  int? maxOrderAmount;
+  String? couponPercentage;
+  String? symbol;
+  String? couponDescription;
+  int? discountUseAmt;
+  int? minOrderAmt;
+  int? shopId;
+  String? subCategoryId;
+  String? productId;
+  String? subCategoryName;
+  String? productName;
+  int? active;
+  String? createdAt;
+  String? updatedAt;
+
+  Coupons(
+      {this.id,
+      this.couponCode,
+      this.expiredOn,
+      this.maxOrderAmount,
+      this.couponPercentage,
+      this.symbol,
+      this.couponDescription,
+      this.discountUseAmt,
+      this.minOrderAmt,
+      this.shopId,
+      this.subCategoryId,
+      this.productId,
+      this.subCategoryName,
+      this.productName,
+      this.active,
+      this.createdAt,
+      this.updatedAt});
+
+  Coupons.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    couponCode = json['coupon_code'];
+    expiredOn = json['expired_on'];
+    maxOrderAmount = json['max_order_amount'];
+    couponPercentage = json['coupon_percentage'];
+    symbol = json['symbol'];
+    couponDescription = json['coupon_description'];
+    discountUseAmt = json['Discount_use_amt'];
+    minOrderAmt = json['min_order_amt'];
+    shopId = json['shop_id'];
+    subCategoryId = json['sub_category_id'];
+    productId = json['product_id'];
+    subCategoryName = json['sub_category_name'];
+    productName = json['product_name'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['coupon_code'] = this.couponCode;
+    data['expired_on'] = this.expiredOn;
+    data['max_order_amount'] = this.maxOrderAmount;
+    data['coupon_percentage'] = this.couponPercentage;
+    data['symbol'] = this.symbol;
+    data['coupon_description'] = this.couponDescription;
+    data['Discount_use_amt'] = this.discountUseAmt;
+    data['min_order_amt'] = this.minOrderAmt;
+    data['shop_id'] = this.shopId;
+    data['sub_category_id'] = this.subCategoryId;
+    data['product_id'] = this.productId;
+    data['sub_category_name'] = this.subCategoryName;
+    data['product_name'] = this.productName;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }
@@ -62,8 +153,9 @@ class ShopDetails {
   int? rating;
   int? ratingCount;
   bool? isWishlist;
-  bool? isCart;
+  bool isCart = false;
   bool? isOpened;
+  bool? shop_isopened;
 
   ShopDetails(
       {this.shopId,
@@ -77,8 +169,9 @@ class ShopDetails {
       this.rating,
       this.ratingCount,
       this.isWishlist,
-      this.isCart,
-      this.isOpened});
+      required this.isCart,
+      this.isOpened,
+      this.shop_isopened});
 
   ShopDetails.fromJson(Map<String, dynamic> json) {
     shopId = json['shop_id'];
@@ -94,6 +187,7 @@ class ShopDetails {
     isWishlist = json['is_wishlist'];
     isCart = json['is_cart'];
     isOpened = json['is_opened'];
+    shop_isopened = json['shop_isopened'];
   }
 
   Map<String, dynamic> toJson() {
@@ -111,6 +205,8 @@ class ShopDetails {
     data['is_wishlist'] = this.isWishlist;
     data['is_cart'] = this.isCart;
     data['is_opened'] = this.isOpened;
+    data['shop_isopened'] = this.shop_isopened;
+
     return data;
   }
 }

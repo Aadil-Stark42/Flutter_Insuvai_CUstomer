@@ -1,20 +1,23 @@
 import 'package:insuvaicustomer/models/CartDataModel.dart';
 
+import 'ShopDetailsDataModel.dart';
+
 class OrderSummaryDataModel {
   bool? status;
   String? message;
-  List<Items>? items;
+  List<Items>? items = [];
   OrderDetails? orderDetails;
   PriceDetails? priceDetails;
   bool? available;
-
+  List<Coupons>? coupons = [];
   OrderSummaryDataModel(
       {this.status,
       this.message,
       this.items,
       this.orderDetails,
       this.priceDetails,
-      this.available});
+      this.available,
+      this.coupons});
 
   OrderSummaryDataModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -32,6 +35,12 @@ class OrderSummaryDataModel {
         ? new PriceDetails.fromJson(json['price_details'])
         : null;
     available = json['available'];
+    if (json['coupons'] != null) {
+      coupons = <Coupons>[];
+      json['coupons'].forEach((v) {
+        coupons!.add(new Coupons.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +57,9 @@ class OrderSummaryDataModel {
       data['price_details'] = this.priceDetails!.toJson();
     }
     data['available'] = this.available;
+    if (this.coupons != null) {
+      data['coupons'] = this.coupons!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -154,6 +166,7 @@ class PriceDetails {
   String? gstPrice;
   String? couponDiscount;
   String? total;
+  String? distance_km;
 
   PriceDetails(
       {this.itemsTotal,
@@ -163,7 +176,8 @@ class PriceDetails {
       this.packingCharge,
       this.gstPrice,
       this.couponDiscount,
-      this.total});
+      this.total,
+      this.distance_km});
 
   PriceDetails.fromJson(Map<String, dynamic> json) {
     itemsTotal = json['items_total'];
@@ -174,6 +188,7 @@ class PriceDetails {
     gstPrice = json['gst_price'];
     couponDiscount = json['coupon_discount'];
     total = json['total'];
+    distance_km = json['distance_km'];
   }
 
   Map<String, dynamic> toJson() {
@@ -186,6 +201,7 @@ class PriceDetails {
     data['gst_price'] = this.gstPrice;
     data['coupon_discount'] = this.couponDiscount;
     data['total'] = this.total;
+    data['distance_km'] = this.distance_km;
     return data;
   }
 }

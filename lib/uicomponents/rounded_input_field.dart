@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:insuvaicustomer/uicomponents/text_field_container.dart';
 
 import '../res/ResColor.dart';
 import '../res/ResString.dart';
+import '../utils/UpperCaseTextFormatter.dart';
 
 class RoundedInputField extends StatelessWidget {
   final String hintText;
@@ -12,6 +14,7 @@ class RoundedInputField extends StatelessWidget {
   final double Corner_radius;
   final double horizontal_margin;
   final double elevations;
+  final TextInputFormatter formatter;
 
   const RoundedInputField({
     Key? key,
@@ -22,6 +25,7 @@ class RoundedInputField extends StatelessWidget {
     required this.inputType,
     required this.horizontal_margin,
     required this.elevations,
+    required this.formatter,
   }) : super(key: key);
 
   @override
@@ -37,6 +41,9 @@ class RoundedInputField extends StatelessWidget {
           onChanged: onChanged,
           cursorColor: MainColor,
           keyboardType: inputType,
+          inputFormatters: [
+            formatter,
+          ],
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: Segoe_ui_semibold,

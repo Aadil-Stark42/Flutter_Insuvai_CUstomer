@@ -89,14 +89,17 @@ class ShopDetails {
   String? shopStreet;
   String? shopImage;
   bool? isOpened;
+  bool? shop_isopened = true;
 
-  ShopDetails(
-      {this.cartId,
-      this.shopId,
-      this.shopName,
-      this.shopStreet,
-      this.shopImage,
-      this.isOpened});
+  ShopDetails({
+    this.cartId,
+    this.shopId,
+    this.shopName,
+    this.shopStreet,
+    this.shopImage,
+    this.isOpened,
+    this.shop_isopened,
+  });
 
   ShopDetails.fromJson(Map<String, dynamic> json) {
     cartId = json['cart_id'];
@@ -105,6 +108,7 @@ class ShopDetails {
     shopStreet = json['shop_street'];
     shopImage = json['shop_image'];
     isOpened = json['is_opened'];
+    shop_isopened = json['shop_isopened'];
   }
 
   Map<String, dynamic> toJson() {
@@ -115,6 +119,7 @@ class ShopDetails {
     data['shop_street'] = this.shopStreet;
     data['shop_image'] = this.shopImage;
     data['is_opened'] = this.isOpened;
+    data['shop_isopened'] = this.shop_isopened;
     return data;
   }
 }

@@ -13,5 +13,5 @@ const GreyColor3 = Color(0xFFC4C4C4);
 const TransBlackColor = Color(0x83000000);
 const TransBlackColor2 = Color(0x3E000000);
 const Transperent = Color(0x0);
-const Transperents = Color(0x0);
 const RedColor = Color(0xFFFF0000);
+const couponcolor = Color(0xFF102183);

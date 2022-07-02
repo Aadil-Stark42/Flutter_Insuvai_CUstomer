@@ -59,7 +59,7 @@ class TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
               SizedBox(
                 height: 20,
               ),
-              Row(
+              /* Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
@@ -71,7 +71,7 @@ class TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
               ),
               SizedBox(
                 height: 30,
-              ),
+              ),*/
               WebViewHandle()
             ],
           ),
@@ -120,9 +120,11 @@ class TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
 
   Widget WebViewHandle() {
     if (Temrsurl.isNotEmpty) {
+      print("TemrsurlTemrsurlTemrsurlTemrsurl $Temrsurl");
       return Expanded(
         child: WebView(
           initialUrl: Temrsurl,
+          javascriptMode: JavascriptMode.unrestricted,
         ),
       );
     } else {

@@ -177,6 +177,8 @@ class CategorySearchScreenState extends State<CategorySearchScreen> {
                                   DashBoardData.category1![index].name
                                       .toString(),
                                   textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     height: 1.1,
                                     fontFamily: Inter_regular,

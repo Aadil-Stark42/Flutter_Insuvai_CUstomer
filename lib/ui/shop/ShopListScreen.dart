@@ -70,54 +70,68 @@ class _ShopListScreenState extends State<ShopListScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-              automaticallyImplyLeading: false,
-              pinned: false,
-              backgroundColor: WhiteColor,
-              floating: true,
-              snap: false,
-              flexibleSpace: FlexibleSpaceBar(),
-              elevation: 2,
-              forceElevated: true,
-              centerTitle: false,
-              leading: null,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(IMAGE_PATH + "back_arrow.png",
-                        height: 25, width: 25),
+            automaticallyImplyLeading: false,
+            pinned: false,
+            backgroundColor: WhiteColor,
+            floating: true,
+            snap: false,
+            flexibleSpace: FlexibleSpaceBar(),
+            elevation: 2,
+            forceElevated: true,
+            centerTitle: false,
+            leading: null,
+            title: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Image.asset(IMAGE_PATH + "back_arrow.png",
+                            height: 25, width: 25),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Text(
+                            widget.Category_Name,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: Inter_bold,
+                                color: BlackColor),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    widget.Category_Name,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: Inter_bold,
-                        color: BlackColor),
-                  ),
-                ],
-              ),
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              GlobalSearchScreen("", widget.Category_Id)),
-                    );
-                  },
-                  child: Image.asset(IMAGE_PATH + "ic_search.png",
-                      height: 20, width: 20),
                 ),
-                SizedBox(
-                  width: 15,
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  GlobalSearchScreen("", widget.Category_Id)),
+                        );
+                      },
+                      child: Image.asset(IMAGE_PATH + "ic_search.png",
+                          height: 20, width: 20),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                  ],
                 )
-              ]),
+              ],
+            ),
+          ),
           SliverList(delegate: SliverChildListDelegate([ShopListDataView()]))
         ],
       ),
@@ -441,17 +455,20 @@ class _ShopListScreenState extends State<ShopListScreen> {
     Size size = MediaQuery.of(context).size;
     if (mainshopList != null) {
       if (mainshopList.isNotEmpty) {
-        print("shopListshopListshopList ${mainshopList.length}");
         List<Shops>? shopList1 = [];
         List<Shops>? shopList2 = [];
         mainshopList.forEach((element) {
           shopList2!.add(element);
         });
+        print("shopList2shopList2shopList2 ${mainshopList.length}");
         if (mainshopList.length > 3) {
           for (var i = 0; i < 3; i++) {
+            print("iiiiiiiiiiii ${i}");
             shopList1.add(shopList2[i]);
-            shopList2.removeAt(i);
           }
+          shopList2.removeAt(0);
+          shopList2.removeAt(0);
+          shopList2.removeAt(0);
         } else {
           shopList2 = [];
           shopList1 = mainshopList;
@@ -483,196 +500,231 @@ class _ShopListScreenState extends State<ShopListScreen> {
                                   builder: (context) => ShopDetailsScreen(
                                       shopList1![index].shopId.toString(),
                                       widget.Category_Id,
-                                      widget.Category_Name)),
+                                      widget.Category_Name,
+                                      () {})),
                             );
                           },
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0)),
-                                child: Stack(
-                                  children: [
-                                    SizedBox(
-                                      height: 90,
-                                      width: 90,
-                                      child: FadeInImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                          shopList1![index]
-                                              .shopImage
-                                              .toString(),
-                                        ),
-                                        placeholder: AssetImage(
-                                            "${IMAGE_PATH}ic_logo.png"),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      child: Container(
-                                        color: shopList1[index].isOpened == true
-                                            ? MainColor
-                                            : RedColor,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            shopList1[index].isOpened == true
-                                                ? "Open"
-                                                : "Close",
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: true,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontFamily: Segoeui,
-                                                color: WhiteColor),
+                          child: Container(
+                            width: double.maxFinite,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10.0)),
+                                  child: Stack(
+                                    children: [
+                                      SizedBox(
+                                        height: 90,
+                                        width: 90,
+                                        child: FadeInImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                            shopList1![index]
+                                                .shopImage
+                                                .toString(),
                                           ),
+                                          placeholder: AssetImage(
+                                              "${IMAGE_PATH}ic_logo.png"),
                                         ),
                                       ),
-                                      left: 0,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      shopList1[index].shopName.toString(),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          fontFamily: Inter_bold,
-                                          color: BlackColor),
-                                    ),
-                                    SizedBox(
-                                      height: 2,
-                                    ),
-                                    Wrap(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        Text(
-                                          shopList1[index].shopArea.toString() +
-                                              " " +
-                                              shopList1[index]
-                                                  .distance
-                                                  .toString(),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              fontFamily: Poppinsmedium,
-                                              color: GreyColor),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Icon(
-                                          Icons.watch_later_outlined,
-                                          size: 15,
-                                          color: GreyColor,
-                                        ),
-                                        SizedBox(
-                                          width: 2,
-                                        ),
-                                        Text(
-                                          shopList1[index].time.toString(),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              fontFamily: Poppinsmedium,
-                                              color: GreyColor),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text(
-                                      "Approx price for two person : " +
-                                          shopList1[index].price.toString(),
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontFamily: Poppinsmedium,
-                                          color: GreyColor),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              shopList1[index]
-                                                  .rating
-                                                  .toString(),
+                                      /*    Positioned(
+                                        child: Container(
+                                          color:
+                                              shopList1[index].isOpened == true
+                                                  ? MainColor
+                                                  : RedColor,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              shopList1[index].isOpened == true
+                                                  ? "Open"
+                                                  : "Close",
                                               overflow: TextOverflow.ellipsis,
                                               softWrap: true,
                                               style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontFamily: Segoe_ui_semibold,
-                                                  color: MainColor),
+                                                  fontSize: 12,
+                                                  fontFamily: Segoeui,
+                                                  color: WhiteColor),
                                             ),
-                                            const SizedBox(
-                                              width: 2,
-                                            ),
-                                            Icon(
-                                              Icons.star_rounded,
-                                              size: 15,
-                                              color: MainColor,
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: 1,
-                                          height: 12,
-                                          color: GreyColor2,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          shopList1[index]
-                                              .ratingCount
-                                              .toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontFamily: Segoe_ui_semibold,
-                                              color: GreyColor2),
-                                        ),
-                                        SizedBox(
-                                          width: 4,
-                                        ),
-                                        Text(
-                                          "Reviews",
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontFamily: Segoe_ui_semibold,
-                                              color: GreyColor2),
-                                        )
-                                      ],
-                                    )
-                                  ],
+                                        left: 0,
+                                      )*/
+                                    ],
+                                  ),
                                 ),
-                              )
-                            ],
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        shopList1[index].shopName.toString(),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            fontFamily: Inter_bold,
+                                            color: BlackColor),
+                                      ),
+                                      SizedBox(
+                                        height: 2,
+                                      ),
+                                      Wrap(
+                                        direction: Axis.horizontal,
+                                        children: [
+                                          Text(
+                                            shopList1[index]
+                                                    .shopArea
+                                                    .toString() +
+                                                " " +
+                                                shopList1[index]
+                                                    .distance
+                                                    .toString(),
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: Poppinsmedium,
+                                                color: GreyColor),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.watch_later_outlined,
+                                            size: 15,
+                                            color: GreyColor,
+                                          ),
+                                          SizedBox(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            shopList1[index].time.toString(),
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: Poppinsmedium,
+                                                color: GreyColor),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 2,
+                                      ),
+                                      Text(
+                                        shopList1[index]
+                                            .shop_openclose_dtl
+                                            .toString(),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: Poppinsmedium,
+                                            color: shopList1[index]
+                                                        .iscoloured_blue ==
+                                                    "true"
+                                                ? MainColor
+                                                : RedColor),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      shopList1[index].coupons!.length != 0
+                                          ? Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: couponcolor),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8, vertical: 3),
+                                              child: Text(
+                                                "Coupons available",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontFamily: Poppinsmedium,
+                                                    color: WhiteColor),
+                                              ),
+                                            )
+                                          : Container(),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                shopList1[index]
+                                                    .rating
+                                                    .toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: true,
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontFamily:
+                                                        Segoe_ui_semibold,
+                                                    color: MainColor),
+                                              ),
+                                              const SizedBox(
+                                                width: 2,
+                                              ),
+                                              Icon(
+                                                Icons.star_rounded,
+                                                size: 15,
+                                                color: MainColor,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Container(
+                                            width: 1,
+                                            height: 12,
+                                            color: GreyColor2,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            shopList1[index]
+                                                .ratingCount
+                                                .toString(),
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontFamily: Segoe_ui_semibold,
+                                                color: GreyColor2),
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            "Reviews",
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontFamily: Segoe_ui_semibold,
+                                                color: GreyColor2),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       )),
@@ -743,188 +795,215 @@ class _ShopListScreenState extends State<ShopListScreen> {
                             builder: (context) => ShopDetailsScreen(
                                 shopList[index].shopId.toString(),
                                 widget.Category_Id,
-                                widget.Category_Name)),
+                                widget.Category_Name,
+                                () {})),
                       );
                     },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0)),
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                height: 90,
-                                width: 90,
-                                child: FadeInImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    shopList[index].shopImage.toString(),
-                                  ),
-                                  placeholder:
-                                      AssetImage("${IMAGE_PATH}ic_logo.png"),
-                                ),
-                              ),
-                              Positioned(
-                                child: Container(
-                                  color: shopList[index].isOpened == true
-                                      ? MainColor
-                                      : RedColor,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Text(
-                                      shopList[index].isOpened == true
-                                          ? "Open"
-                                          : "Close",
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: Segoeui,
-                                          color: WhiteColor),
+                    child: Container(
+                      width: double.maxFinite,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10.0)),
+                            child: Stack(
+                              children: [
+                                SizedBox(
+                                  height: 90,
+                                  width: 90,
+                                  child: FadeInImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      shopList[index].shopImage.toString(),
                                     ),
+                                    placeholder:
+                                        AssetImage("${IMAGE_PATH}ic_logo.png"),
                                   ),
                                 ),
-                                left: 0,
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                shopList[index].shopName.toString(),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontFamily: Inter_bold,
-                                    color: BlackColor),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Wrap(
-                                direction: Axis.horizontal,
-                                children: [
-                                  Text(
-                                    shopList[index].shopArea.toString() +
-                                        " " +
-                                        shopList[index].distance.toString(),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        fontFamily: Poppinsmedium,
-                                        color: GreyColor),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Icon(
-                                    Icons.watch_later_outlined,
-                                    size: 15,
-                                    color: GreyColor,
-                                  ),
-                                  SizedBox(
-                                    width: 2,
-                                  ),
-                                  Text(
-                                    shopList[index].time.toString(),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        fontFamily: Poppinsmedium,
-                                        color: GreyColor),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                "Approx price for two person : " +
-                                    shopList[index].price.toString(),
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: Poppinsmedium,
-                                    color: GreyColor),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        shopList[index].rating.toString(),
+                                /*     Positioned(
+                                  child: Container(
+                                    color: shopList[index].isOpened == true
+                                        ? MainColor
+                                        : RedColor,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Text(
+                                        shopList[index].isOpened == true
+                                            ? "Open"
+                                            : "Close",
                                         overflow: TextOverflow.ellipsis,
                                         softWrap: true,
                                         style: TextStyle(
-                                            fontSize: 13,
-                                            fontFamily: Segoe_ui_semibold,
-                                            color: MainColor),
+                                            fontSize: 12,
+                                            fontFamily: Segoeui,
+                                            color: WhiteColor),
                                       ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      Icon(
-                                        Icons.star_rounded,
-                                        size: 15,
-                                        color: MainColor,
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Container(
-                                    width: 1,
-                                    height: 12,
-                                    color: GreyColor2,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    shopList[index].ratingCount.toString(),
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: Segoe_ui_semibold,
-                                        color: GreyColor2),
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    "Reviews",
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: Segoe_ui_semibold,
-                                        color: GreyColor2),
-                                  )
-                                ],
-                              )
-                            ],
+                                  left: 0,
+                                )*/
+                              ],
+                            ),
                           ),
-                        )
-                      ],
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  shopList[index].shopName.toString(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontFamily: Inter_bold,
+                                      color: BlackColor),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Wrap(
+                                  direction: Axis.horizontal,
+                                  children: [
+                                    Text(
+                                      shopList[index].shopArea.toString() +
+                                          " " +
+                                          shopList[index].distance.toString(),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: Poppinsmedium,
+                                          color: GreyColor),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.watch_later_outlined,
+                                      size: 15,
+                                      color: GreyColor,
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Text(
+                                      shopList[index].time.toString(),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: Poppinsmedium,
+                                          color: GreyColor),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  shopList[index].shop_openclose_dtl.toString(),
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: Poppinsmedium,
+                                      color: shopList[index].iscoloured_blue ==
+                                              "true"
+                                          ? MainColor
+                                          : RedColor),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                shopList[index].coupons!.length != 0
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: couponcolor),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
+                                        child: Text(
+                                          "Coupons available",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: Poppinsmedium,
+                                              color: WhiteColor),
+                                        ),
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          shopList[index].rating.toString(),
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: true,
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontFamily: Segoe_ui_semibold,
+                                              color: MainColor),
+                                        ),
+                                        const SizedBox(
+                                          width: 2,
+                                        ),
+                                        Icon(
+                                          Icons.star_rounded,
+                                          size: 15,
+                                          color: MainColor,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Container(
+                                      width: 1,
+                                      height: 12,
+                                      color: GreyColor2,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      shopList[index].ratingCount.toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: Segoe_ui_semibold,
+                                          color: GreyColor2),
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      "Reviews",
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: Segoe_ui_semibold,
+                                          color: GreyColor2),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )),
@@ -1290,15 +1369,17 @@ class _ShopListScreenState extends State<ShopListScreen> {
             .actualPrice
             .toString()
             .replaceAll(",", ""))) {
-      return Text(
-        RUPPEE + productList[index].variants![0].actualPrice.toString(),
-        maxLines: 1,
-        style: TextStyle(
-            fontSize: 11,
-            fontFamily: Inter_medium,
-            color: GreyColor,
-            decoration: TextDecoration.lineThrough,
-            decorationThickness: 1.5),
+      return Flexible(
+        child: Text(
+          RUPPEE + productList[index].variants![0].actualPrice.toString(),
+          maxLines: 1,
+          style: TextStyle(
+              fontSize: 11,
+              fontFamily: Inter_medium,
+              color: GreyColor,
+              decoration: TextDecoration.lineThrough,
+              decorationThickness: 1.5),
+        ),
       );
     } else {
       return Container();

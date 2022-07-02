@@ -456,6 +456,186 @@ class MyOrderTrackingScreenState extends State<MyOrderTrackingScreen> {
                 SizedBox(
                   height: 20,
                 ),
+                /*  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          TotalFoodCost,
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 12,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        ),
+                        Text(
+                          "₹${_orderSummaryDataModel.priceDetails!.subTotal}",
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          CouponDiscount,
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 12,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        ),
+                        Text(
+                          "₹${_orderSummaryDataModel.priceDetails!.couponDiscount}",
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "GST " + widget.GstPer + "%",
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 12,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        ),
+                        Text(
+                          "₹${_orderSummaryDataModel.priceDetails!.gstPrice}",
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          PackingCharges,
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 12,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        ),
+                        Text(
+                          "₹${_orderSummaryDataModel.priceDetails!.packingCharge}",
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DeliveryChargesTag,
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 12,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        ),
+                        Text(
+                          "(" +
+                              _orderSummaryDataModel.priceDetails!.distance_km
+                                  .toString() +
+                              ") " +
+                              "₹${_orderSummaryDataModel.priceDetails!.deliveryCharge}",
+                          style: TextStyle(
+                            fontFamily: Poppinsmedium,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: GreyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          GrandTotal,
+                          style: TextStyle(
+                            fontFamily: Segoe_ui_bold,
+                            fontSize: 18,
+                            height: 1.0,
+                            color: BlackColor,
+                          ),
+                        ),
+                        Text(
+                          "₹${_orderSummaryDataModel.priceDetails!.total}",
+                          style: TextStyle(
+                            fontFamily: Segoe_ui_bold,
+                            fontSize: 18,
+                            height: 1.0,
+                            color: BlackColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      Inclusivecharges,
+                      style: TextStyle(
+                        fontFamily: Poppinsmedium,
+                        fontSize: 10,
+                        height: 1.0,
+                        color: GreyColor,
+                      ),
+                    ),
+                  ],
+                ),*/
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

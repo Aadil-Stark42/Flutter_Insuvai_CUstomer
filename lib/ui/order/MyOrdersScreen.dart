@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:insuvaicustomer/apiservice/EndPoints.dart';
 import 'package:insuvaicustomer/models/OrdersListDataModel.dart';
@@ -17,6 +18,7 @@ import '../../../apiservice/ApiService.dart';
 import '../../../apiservice/EndPoints.dart';
 import '../../../res/ResString.dart';
 import '../../../uicomponents/MyProgressBar.dart';
+import '../../uicomponents/RoundedBorderButton.dart';
 import '../../uicomponents/progress_button.dart';
 import 'OrderTrackingScreen.dart';
 
@@ -408,7 +410,10 @@ class MyOrdersScreenState extends State<MyOrdersScreen> {
             children: [
               Expanded(
                   child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  RatingDeliveryBoyDialog(
+                      ordersListDataModel.orders![index].orderId.toString());
+                },
                 child: Center(
                   child: Text(
                     RateDeliveryBoy,
@@ -423,7 +428,10 @@ class MyOrdersScreenState extends State<MyOrdersScreen> {
               Container(width: 0.5, height: 25, color: GreyColor2),
               Expanded(
                   child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  RepeatOrders(
+                      ordersListDataModel.orders![index].orderId.toString());
+                },
                 child: Center(
                   child: Text(
                     RepeatOrder,
@@ -915,5 +923,186 @@ class MyOrdersScreenState extends State<MyOrdersScreen> {
         ordersListDataModel.orders![index].canCancel = false;
       });
     }
+  }
+
+  void RatingDeliveryBoyDialog(String orderId) {
+    double Rating_value = 0.0;
+    String Comments = "";
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        enableDrag: false,
+        backgroundColor: WhiteColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+        builder: (builder) {
+          return StatefulBuilder(builder: (BuildContext context,
+              StateSetter setState /*You can rename this!*/) {
+            return Wrap(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: 20,
+                      left: 15,
+                      right: 15,
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            howdoyourate,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: Inter_bold,
+                                color: BlackColor),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            Yourfeedbackwill,
+                            style: TextStyle(
+                                color: GreyColor,
+                                fontFamily: Inter_regular,
+                                height: 1.1,
+                                fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      RatingBar.builder(
+                        initialRating: 0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        itemCount: 5,
+                        unratedColor: MainLightColor2,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: MainColor,
+                        ),
+                        onRatingUpdate: (rating) {
+                          Rating_value = rating;
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        onChanged: (value) {
+                          Comments = value;
+                        },
+                        decoration: InputDecoration(
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: GreyColor, width: 0.5),
+                            ),
+                            hintStyle: TextStyle(color: GreyColor2),
+                            hintText: 'Leave a comment'),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RoundedBorderButton(
+                              txt: Cancel,
+                              txtSize: 12,
+                              CornerReduis: Rounded_Button_Corner,
+                              BorderWidth: 0.8,
+                              BackgroundColor: WhiteColor,
+                              ForgroundColor: MainColor,
+                              PaddingLeft: 10,
+                              PaddingRight: 10,
+                              PaddingTop: 14,
+                              PaddingBottom: 14,
+                              press: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: ProgressButton(
+                              child: Text(
+                                Confirmss,
+                                style: TextStyle(
+                                  color: WhiteColor,
+                                  fontFamily: Segoe_ui_semibold,
+                                  height: 1.1,
+                                ),
+                              ),
+                              onPressed: () {
+                                RatingtoDeliveryBoy(
+                                    Rating_value, Comments, orderId);
+                              },
+                              buttonState: ButtonState.normal,
+                              backgroundColor: MainColor,
+                              progressColor: WhiteColor,
+                              border_radius: Rounded_Button_Corner,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            );
+          });
+        });
+  }
+
+  Future<void> RatingtoDeliveryBoy(
+      double rating_value, String comments, String order_id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var header = <String, dynamic>{};
+    String? token = prefs.getString(TOKEN);
+    header[Authorization] = Bearer + token.toString();
+    print("HEADERSSS${header.toString()}");
+    var ApiCalling = GetApiInstanceWithHeaders(header);
+    var Params = <String, dynamic>{};
+    Params[order_ids] = order_id;
+    Params[rating] = rating_value;
+    Params[comment] = comments;
+    print("ParamsParamsParams${Params.toString()}");
+    Response response;
+    response = await ApiCalling.post(CUSTOMER_DELIVERY_RATING, data: Params);
+    print("CanceledReasonNoteRESPONSE${response.data.toString()}");
+    ShowToast(response.data[message], context);
+    Navigator.pop(context);
+  }
+
+  Future<void> RepeatOrders(String order_id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var header = <String, dynamic>{};
+    String? token = prefs.getString(TOKEN);
+    header[Authorization] = Bearer + token.toString();
+    print("HEADERSSS${header.toString()}");
+    var ApiCalling = GetApiInstanceWithHeaders(header);
+    var Params = <String, dynamic>{};
+    Params[order_ids] = order_id;
+    print("ParamsParamsParams${Params.toString()}");
+    Response response;
+    response = await ApiCalling.post(ORDER_AGAIN, data: Params);
+    print("CanceledReasonNoteRESPONSE${response.data.toString()}");
+    ShowToast(response.data[message], context);
   }
 }

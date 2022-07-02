@@ -237,7 +237,7 @@ class _OtpScreenState extends State<OtpScreen> {
       setState(() {
         buttonState = ButtonState.normal;
       });
-      ShowToast(response.data[message], context);
+
       prefs.setBool(ISLOGIN, true);
       Future.delayed(const Duration(milliseconds: 1000), () {
         AddLoginData(
@@ -251,7 +251,8 @@ class _OtpScreenState extends State<OtpScreen> {
           print("SELECTED_ADDRESS_ID  NULLLLLLL");
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => SelectAddressScreen(false,"",false)),
+              MaterialPageRoute(
+                  builder: (context) => SelectAddressScreen(false, "", false)),
               (Route<dynamic> route) => false);
         } else {
           Navigator.pushAndRemoveUntil(
@@ -264,6 +265,7 @@ class _OtpScreenState extends State<OtpScreen> {
       setState(() {
         buttonState = ButtonState.normal;
       });
+      ShowToast(response.data[message], context);
     }
   }
 

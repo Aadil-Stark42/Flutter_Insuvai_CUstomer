@@ -1,11 +1,11 @@
 import 'ShopDetailsDataModel.dart';
+import 'ShopListDataModel.dart';
 
 class ShopListDataModel {
   bool? status;
   String? message;
   String? shopCategoryId;
   List<Shops>? shops;
-
   List<Products>? products;
 
   ShopListDataModel(
@@ -62,19 +62,26 @@ class Shops {
   int? rating;
   int? ratingCount;
   bool? isOpened;
+  String? shop_openclose_dtl;
+  String iscoloured_blue = "";
+  List<Coupons>? coupons = [];
 
-  Shops(
-      {this.shopId,
-      this.shopName,
-      this.shopImage,
-      this.shopArea,
-      this.shopAddress,
-      this.price,
-      this.distance,
-      this.time,
-      this.rating,
-      this.ratingCount,
-      this.isOpened});
+  Shops({
+    this.shopId,
+    this.shopName,
+    this.shopImage,
+    this.shopArea,
+    this.shopAddress,
+    this.price,
+    this.distance,
+    this.time,
+    this.rating,
+    this.ratingCount,
+    this.isOpened,
+    this.shop_openclose_dtl,
+    required this.iscoloured_blue,
+    this.coupons,
+  });
 
   Shops.fromJson(Map<String, dynamic> json) {
     shopId = json['shop_id'];
@@ -88,6 +95,14 @@ class Shops {
     rating = json['rating'];
     ratingCount = json['rating_count'];
     isOpened = json['is_opened'];
+    shop_openclose_dtl = json['shop_openclose_dtl'];
+    iscoloured_blue = json['iscoloured_blue'];
+    if (json['coupons'] != null) {
+      coupons = <Coupons>[];
+      json['coupons'].forEach((v) {
+        coupons!.add(Coupons.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +118,11 @@ class Shops {
     data['rating'] = rating;
     data['rating_count'] = ratingCount;
     data['is_opened'] = isOpened;
+    data['shop_openclose_dtl'] = shop_openclose_dtl;
+    data['iscoloured_blue'] = iscoloured_blue;
+    if (coupons != null) {
+      data['coupons'] = coupons!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -148,6 +168,24 @@ class Products {
     if (variants != null) {
       data['variants'] = variants!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class Coupons {
+  String? coupon_code;
+
+  Coupons({
+    this.coupon_code,
+  });
+
+  Coupons.fromJson(Map<String, dynamic> json) {
+    coupon_code = json['coupon_code'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['coupon_code'] = coupon_code;
     return data;
   }
 }

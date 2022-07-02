@@ -27,7 +27,7 @@ class MyHomeScreen extends StatefulWidget {
 class MyHomeScreenState extends State<MyHomeScreen> {
   int currentIndex = 0;
 
-  final List<Widget> viewContainer = [
+  /*final List<Widget> viewContainer = [
     HomeSubScreen(),
     CategorySearchScreen(),
     CartSubScreen(false, true, () {}),
@@ -50,7 +50,7 @@ class MyHomeScreenState extends State<MyHomeScreen> {
       currentIndex = index;
     });
   }
-
+*/
   @override
   void initState() {
     // TODO: implement initState
@@ -63,7 +63,7 @@ class MyHomeScreenState extends State<MyHomeScreen> {
 
     return Scaffold(
       backgroundColor: WhiteColor,
-      body: viewContainer[currentIndex],
+      body: bottomView(),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
         child: BottomNavigationBar(
@@ -71,7 +71,11 @@ class MyHomeScreenState extends State<MyHomeScreen> {
             selectedItemColor: WhiteColor,
             type: BottomNavigationBarType.fixed,
             unselectedItemColor: lightWhiteColor,
-            onTap: onTabTapped,
+            onTap: (index) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
             // new
 
             currentIndex: currentIndex,
@@ -97,5 +101,29 @@ class MyHomeScreenState extends State<MyHomeScreen> {
             ]),
       ),
     );
+  }
+
+  Widget bottomView() {
+    if (CHECKAPPSTATUS == STATUSNUMBER) {
+      if (currentIndex == 1 || currentIndex == 2) {
+        return AppMaintainanceScreen(false);
+      } else {
+        if (currentIndex == 0) {
+          return HomeSubScreen();
+        } else {
+          return ProfileScreen();
+        }
+      }
+    } else {
+      if (currentIndex == 0) {
+        return HomeSubScreen();
+      } else if (currentIndex == 1) {
+        return CategorySearchScreen();
+      } else if (currentIndex == 2) {
+        return CartSubScreen(false, true, () {});
+      } else {
+        return ProfileScreen();
+      }
+    }
   }
 }

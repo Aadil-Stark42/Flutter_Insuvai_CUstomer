@@ -25,6 +25,13 @@ void ShowToast(String message, BuildContext context) {
   ));
 }
 
+void ShowLongToast(String message, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    duration: const Duration(seconds: 2),
+    content: Text(message),
+  ));
+}
+
 void HideKeyBoard() {
   SystemChannels.textInput.invokeMethod('TextInput.hide');
 }
