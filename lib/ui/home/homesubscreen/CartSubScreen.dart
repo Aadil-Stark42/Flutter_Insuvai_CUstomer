@@ -11,6 +11,7 @@ import 'package:insuvaicustomer/res/ResColor.dart';
 import 'package:insuvaicustomer/ui/order/OrderSummaryScreen.dart';
 import 'package:insuvaicustomer/utils/LocalStorageName.dart';
 import 'package:insuvaicustomer/utils/LowerCaseTextFormatter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/DashBoardDataModell.dart';
@@ -51,7 +52,7 @@ class CartSubScreenState extends State<CartSubScreen> {
   String CouponValue = "";
   String dropdownvalue = 'Select';
   String slotsId = '';
-
+  bool isClickCouponAplly = false;
   @override
   void initState() {
     super.initState();
@@ -93,6 +94,12 @@ class CartSubScreenState extends State<CartSubScreen> {
       if (cartDataModel.products == null || cartDataModel.products!.isEmpty) {
         cartDataModel.status = false;
       }
+      if (isClickCouponAplly) {
+        if (cartDataModel.couponDiscount.toString() != "0.00") {
+          showCouponDialog();
+        }
+      }
+
       print("responseresponseresponse${response.toString().toString()}");
       print("cartDataModel.products!.length${cartDataModel.status}");
     });
@@ -298,7 +305,9 @@ class CartSubScreenState extends State<CartSubScreen> {
                   fontFamily: Poppinsmedium,
                   fontSize: 12,
                   height: 1.0,
-                  color: GreyColor,
+                  color: cartDataModel.couponDiscount.toString() != "0.00"
+                      ? RedColor
+                      : GreyColor,
                 ),
               ),
               Text(
@@ -307,7 +316,9 @@ class CartSubScreenState extends State<CartSubScreen> {
                   fontFamily: Poppinsmedium,
                   fontSize: 13,
                   height: 1.0,
-                  color: GreyColor,
+                  color: cartDataModel.couponDiscount.toString() != "0.00"
+                      ? RedColor
+                      : GreyColor,
                 ),
               )
             ],
@@ -770,6 +781,7 @@ class CartSubScreenState extends State<CartSubScreen> {
                                   ),
                                   onPressed: () {
                                     if (CouponValue.isNotEmpty) {
+                                      isClickCouponAplly = true;
                                       AddCouponCode();
                                     } else {
                                       ShowToast(
@@ -1187,6 +1199,134 @@ class CartSubScreenState extends State<CartSubScreen> {
               ),
             );
           });
+        });
+  }
+
+  showCouponDialog() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: double.maxFinite,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                height: 355,
+                child: Center(
+                  child: Stack(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 200),
+                        child: SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: Lottie.asset(
+                            IMAGE_PATH + "saved_money.json",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 170,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                Text(
+                                  "\'" + CouponValue.toUpperCase() + "\'",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: Segoe_ui_semibold,
+                                    fontSize: 13,
+                                    height: 1.0,
+                                    color: GreyColor5,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "applied",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: Segoe_ui_semibold,
+                                    fontSize: 11,
+                                    height: 1.0,
+                                    color: GreyColor5,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "YOU SAVED " +
+                                  RUPPEE +
+                                  cartDataModel.couponDiscount.toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: Segoe_bold,
+                                fontSize: 19,
+                                height: 1.0,
+                                color: BlackColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "with this coupon code.",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: Segoe_ui_semibold,
+                                fontSize: 12,
+                                height: 1.0,
+                                color: GreyColor5,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "Woohoo! Thanks..",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: Segoe_ui_semibold,
+                                fontSize: 13,
+                                height: 1.0,
+                                color: RedColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
         });
   }
 }

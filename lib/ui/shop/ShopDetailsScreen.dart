@@ -521,7 +521,6 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
                               ),
                               Text(
                                 shopProductsList[index].description.toString(),
-                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 13,
                                     fontFamily: Poppinsmedium,

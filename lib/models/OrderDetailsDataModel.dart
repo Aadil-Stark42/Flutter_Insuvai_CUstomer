@@ -7,7 +7,7 @@ class OrderDetailsDataModel {
   TimeDetails? timeDetails;
   List<Items>? items;
   OrderDetails? orderDetails;
-  Null? deliveryBoyContact;
+  String? deliveryBoyContact;
 
   OrderDetailsDataModel(
       {this.status,

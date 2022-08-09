@@ -654,7 +654,7 @@ class MyHomeSubScreenState extends State<MyHomeSubScreen> {
                                                                 TextOverflow
                                                                     .ellipsis,
                                                             fontFamily:
-                                                                Inter_regular,
+                                                                Inter_bold,
                                                             fontSize: 11,
                                                             fontWeight:
                                                                 FontWeight.w600,
@@ -792,8 +792,7 @@ class MyHomeSubScreenState extends State<MyHomeSubScreen> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         height: 1.1,
-                                                        fontFamily:
-                                                            Inter_regular,
+                                                        fontFamily: Inter_bold,
                                                         fontSize: 13,
                                                         fontWeight:
                                                             FontWeight.w600,

@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:insuvaicustomer/apiservice/EndPoints.dart';
-import 'package:insuvaicustomer/models/CartDataModel.dart';
 import 'package:insuvaicustomer/res/ResColor.dart';
 import 'package:insuvaicustomer/uicomponents/MyProgressBar.dart';
 import 'package:insuvaicustomer/utils/LocalStorageName.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/DashBoardDataModell.dart';
@@ -15,14 +13,9 @@ import '../../../animationlist/src/animation_configuration.dart';
 import '../../../animationlist/src/animation_limiter.dart';
 import '../../../animationlist/src/fade_in_animation.dart';
 import '../../../animationlist/src/scale_animation.dart';
-import '../../../animationlist/src/slide_animation.dart';
 import '../../../apiservice/ApiService.dart';
 import '../../../apiservice/EndPoints.dart';
-import '../../../imageslider/carousel_slider.dart';
 import '../../../res/ResString.dart';
-import '../../../uicomponents/SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight.dart';
-import '../../../uicomponents/progress_button.dart';
-import '../../../uicomponents/rounded_input_field.dart';
 import '../../../utils/Utils.dart';
 import '../../search/GlobalSearchScreen.dart';
 import '../../shop/ShopListScreen.dart';
@@ -181,9 +174,8 @@ class CategorySearchScreenState extends State<CategorySearchScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     height: 1.1,
-                                    fontFamily: Inter_regular,
+                                    fontFamily: Inter_bold,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w600,
                                     letterSpacing: 0.27,
                                     color: BlackColor,
                                   ),

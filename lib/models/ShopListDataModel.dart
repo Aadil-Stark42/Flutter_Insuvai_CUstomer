@@ -1,5 +1,4 @@
 import 'ShopDetailsDataModel.dart';
-import 'ShopListDataModel.dart';
 
 class ShopListDataModel {
   bool? status;
@@ -63,6 +62,7 @@ class Shops {
   int? ratingCount;
   bool? isOpened;
   String? shop_openclose_dtl;
+  String? coupon_detail;
   String iscoloured_blue = "";
   List<Coupons>? coupons = [];
 
@@ -81,6 +81,7 @@ class Shops {
     this.shop_openclose_dtl,
     required this.iscoloured_blue,
     this.coupons,
+    this.coupon_detail,
   });
 
   Shops.fromJson(Map<String, dynamic> json) {
@@ -97,6 +98,7 @@ class Shops {
     isOpened = json['is_opened'];
     shop_openclose_dtl = json['shop_openclose_dtl'];
     iscoloured_blue = json['iscoloured_blue'];
+    coupon_detail = json['coupon_detail'];
     if (json['coupons'] != null) {
       coupons = <Coupons>[];
       json['coupons'].forEach((v) {
@@ -120,6 +122,7 @@ class Shops {
     data['is_opened'] = isOpened;
     data['shop_openclose_dtl'] = shop_openclose_dtl;
     data['iscoloured_blue'] = iscoloured_blue;
+    data['coupon_detail'] = coupon_detail;
     if (coupons != null) {
       data['coupons'] = coupons!.map((v) => v.toJson()).toList();
     }

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:insuvaicustomer/models/PaytmResponse.dart';
 import 'package:insuvaicustomer/models/ShopDetailsDataModel.dart';
+import 'package:lottie/lottie.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 
 import 'package:dio/dio.dart';
@@ -57,6 +58,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
   bool IsLoadingPayment = false;
   String CouponValue = "";
   ButtonState buttonState = ButtonState.normal;
+  bool isClickCouponAplly = false;
 
   @override
   void initState() {
@@ -183,6 +185,13 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
             couponCode: "MYFLAT",
             couponDescription: "FLAT 505 off this Offers"));
         _orderSummaryDataModel.coupons = list;*/
+      }
+
+      if (isClickCouponAplly) {
+        if (_orderSummaryDataModel.priceDetails!.couponDiscount.toString() !=
+            "0.00") {
+          showCouponDialog();
+        }
       }
     });
   }
@@ -463,6 +472,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                           ),
                           onPressed: () {
                             if (CouponValue.isNotEmpty) {
+                              isClickCouponAplly = true;
                               GetOrderSummaryDetails(CouponValue);
                             } else {
                               ShowToast("Please enter coupon code", context);
@@ -588,7 +598,12 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                             fontFamily: Poppinsmedium,
                             fontSize: 12,
                             height: 1.0,
-                            color: GreyColor,
+                            color: _orderSummaryDataModel
+                                        .priceDetails!.couponDiscount
+                                        .toString() !=
+                                    "0.00"
+                                ? RedColor
+                                : GreyColor,
                           ),
                         ),
                         Text(
@@ -597,7 +612,12 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                             fontFamily: Poppinsmedium,
                             fontSize: 13,
                             height: 1.0,
-                            color: GreyColor,
+                            color: _orderSummaryDataModel
+                                        .priceDetails!.couponDiscount
+                                        .toString() !=
+                                    "0.00"
+                                ? RedColor
+                                : GreyColor,
                           ),
                         )
                       ],
@@ -1011,5 +1031,135 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
     }
     ShowToast(value["RESPMSG"].toString(), context);
     print("resultresultresultresultPAYMENTNOT01" + value["RESPMSG"].toString());
+  }
+
+  showCouponDialog() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: double.maxFinite,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                height: 355,
+                child: Center(
+                  child: Stack(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 200),
+                        child: SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: Lottie.asset(
+                            IMAGE_PATH + "saved_money.json",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 170,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                Text(
+                                  "\'" + CouponValue.toUpperCase() + "\'",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: Segoe_ui_semibold,
+                                    fontSize: 13,
+                                    height: 1.0,
+                                    color: GreyColor5,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "applied",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: Segoe_ui_semibold,
+                                    fontSize: 11,
+                                    height: 1.0,
+                                    color: GreyColor5,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "YOU SAVED " +
+                                  RUPPEE +
+                                  _orderSummaryDataModel
+                                      .priceDetails!.couponDiscount
+                                      .toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: Segoe_bold,
+                                fontSize: 19,
+                                height: 1.0,
+                                color: BlackColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "with this coupon code.",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: Segoe_ui_semibold,
+                                fontSize: 12,
+                                height: 1.0,
+                                color: GreyColor5,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "Woohoo! Thanks..",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: Segoe_ui_semibold,
+                                fontSize: 13,
+                                height: 1.0,
+                                color: RedColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
