@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -458,7 +457,6 @@ class MyHomeSubScreenState extends State<MyHomeSubScreen> {
                           child: Text(
                             TopRestaurant,
                             overflow: TextOverflow.ellipsis,
-                            softWrap: true,
                             style: TextStyle(
                                 fontSize: 16,
                                 fontFamily: Inter_bold,
@@ -467,7 +465,7 @@ class MyHomeSubScreenState extends State<MyHomeSubScreen> {
                       Padding(
                           padding: const EdgeInsets.only(
                               left: 0, right: 10, bottom: 0, top: 50),
-                          child: Container(
+                          child: SizedBox(
                             height: 150,
                             child: AnimationLimiter(
                               child: ListView.builder(

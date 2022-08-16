@@ -154,6 +154,7 @@ var howdoyourate = "How do you rate our delivery boy?";
 var Yourfeedbackwill =
     "Your feedback will help us improve delivery experience better.";
 var Confirmss = "Confirm";
+var selectYourLocation = "Select Your Location";
 /*--------------------*/
 
 /*Animation Tim*/
