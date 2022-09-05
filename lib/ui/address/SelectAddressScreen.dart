@@ -10,6 +10,7 @@ import 'package:insuvaicustomer/locationpicker/src/place_picker.dart';
 import 'package:insuvaicustomer/res/ResColor.dart';
 import 'package:insuvaicustomer/ui/home/HomeScreen.dart';
 import 'package:insuvaicustomer/utils/LocalStorageName.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart' as permis;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -248,9 +249,10 @@ class SelectAddressScreenState extends State<SelectAddressScreen> {
             Navigator.pop(context);
             GetAddressList();
           },
-          IsComeFromHome: false,
+          IsComeFromHome: save,
           initialPosition: const LatLng(-33.8567844, 151.213108),
           useCurrentLocation: true,
+          address_id: "",
         ),
       ),
     );
@@ -373,20 +375,57 @@ class SelectAddressScreenState extends State<SelectAddressScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        Remove,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: Segoe_bold,
-                                          color: MainColor,
+                                      InkWell(
+                                        onTap: () {
+                                          showAlertDialog(
+                                              list![index][address_id]);
+                                        },
+                                        child: Text(
+                                          Remove,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: Segoe_bold,
+                                            color: MainColor,
+                                          ),
                                         ),
                                       ),
-                                      Text(
-                                        EditAddress,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: Segoe_bold,
-                                          color: MainColor,
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PlacePicker(
+                                                apiKey: Platform.isAndroid
+                                                    ? MAP_API_KEY
+                                                    : "YOUR IOS API KEY",
+                                                onPlacePicked: (result) {
+                                                  print(
+                                                      result.formattedAddress);
+                                                  Navigator.pop(context);
+                                                  GetAddressList();
+                                                },
+                                                IsComeFromHome: edit,
+                                                initialPosition: LatLng(
+                                                    double.parse(
+                                                        list![index][latitude]),
+                                                    double.parse(list![index]
+                                                        [longitude])),
+                                                useCurrentLocation: false,
+                                                selectInitialPosition: true,
+                                                address_id: list![index]
+                                                        [address_id]
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          EditAddress,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: Segoe_bold,
+                                            color: MainColor,
+                                          ),
                                         ),
                                       )
                                     ],
@@ -416,5 +455,69 @@ class SelectAddressScreenState extends State<SelectAddressScreen> {
         child: MyProgressBar(),
       );
     }
+  }
+
+  showAlertDialog(id) async {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text(
+        "No",
+        style: TextStyle(color: MainColor, fontFamily: Segoe_ui_bold),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text(
+        "Remove",
+        style: TextStyle(color: MainColor, fontFamily: Segoe_ui_bold),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+        removeAddress(id);
+      },
+    );
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String appName = packageInfo.appName;
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(appName,
+          style: TextStyle(color: BlackColor, fontFamily: Segoe_bold)),
+      content: Text(AreYouRemoveAddress,
+          style: TextStyle(color: BlackColor, fontFamily: Inter_medium)),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future<void> removeAddress(id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var header = <String, dynamic>{};
+    String? token = prefs.getString(TOKEN);
+    header[Authorization] = Bearer + token.toString();
+    print("HEADERSSS${header.toString()}");
+
+    var Params = <String, dynamic>{};
+    Params[address_id] = id;
+    print("ParamsParamsParams${Params.toString()}");
+    var ApiCalling = GetApiInstanceWithHeaders(header);
+    Response response;
+    response = await ApiCalling.post(DELETE_ADDRESS, data: Params);
+    setState(() {
+      ShowToast(response.data[message].toString(), context);
+      GetAddressList();
+      print("responseresponseresponse${response.toString().toString()}");
+    });
   }
 }

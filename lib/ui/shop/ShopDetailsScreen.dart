@@ -295,7 +295,7 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
                     ),
                     /*---TabVIew----*/
                     Container(
-                      height: MediaQuery.of(context).size.height / 1.7,
+                      height: MediaQuery.of(context).size.height / 1.6,
                       width: MediaQuery.of(context).size.width,
                       child: CustomTabView(
                         initPosition: CurrentPosition,
@@ -383,11 +383,9 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
       if (index == 0) {
         List<ShopProducts>? shopProductsList =
             shopDetailsDataModel.shopProducts;
-        return Container(
-          child: Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 30),
-            child: CommanListview(shopProductsList!),
-          ),
+        return Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 0),
+          child: CommanListview(shopProductsList!),
         );
       } else {
         return OtherTabData(tabCategories, index);
@@ -401,11 +399,9 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
     if (shopProductDataModel.shopProducts != null &&
         shopProductDataModel.status != false) {
       List<ShopProducts>? shopProductsList = shopProductDataModel.shopProducts;
-      return Container(
-        child: Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 30),
-          child: CommanListview(shopProductsList!),
-        ),
+      return Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 0),
+        child: CommanListview(shopProductsList!),
       );
     } else {
       return Container(
@@ -443,7 +439,8 @@ class ShopDetailsScreenState extends State<ShopDetailsScreen>
   Widget CommanListview(List<ShopProducts> shopProductsList) {
     return AnimationLimiter(
       child: ListView.builder(
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.only(
+            bottom: shopDetailsDataModel.coupons!.isNotEmpty ? 150 : 70),
         itemCount: shopProductsList.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (BuildContext context, int index) {

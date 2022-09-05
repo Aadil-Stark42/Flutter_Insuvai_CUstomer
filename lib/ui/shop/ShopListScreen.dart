@@ -867,7 +867,7 @@ class _ShopListScreenState extends State<ShopListScreen> {
                                       child: FadeInImage(
                                         fit: BoxFit.cover,
                                         image: NetworkImage(
-                                          shopList![index].shopImage.toString(),
+                                          shopList[index].shopImage.toString(),
                                         ),
                                         placeholder: AssetImage(
                                             "${IMAGE_PATH}ic_logo.png"),
@@ -1442,7 +1442,7 @@ class _ShopListScreenState extends State<ShopListScreen> {
     Response response;
     response = await ApiCalling.post(MULTI_SORT, data: Params);
     print(
-        "GetMultiFilterresponseresponseresponse${response.data["products"].toString()}");
+        "GetMultiFilterresponseresponseresponse${response.data["shops"].toString()}");
     if (response.data[status] == true) {
       setState(() {
         shopListDataModel = ShopListDataModel.fromJson(response.data);

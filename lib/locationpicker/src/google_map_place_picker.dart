@@ -71,6 +71,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
     this.selectText,
     this.outsideOfPickAreaText,
     this.IsComeFromHome,
+    this.address_ids,
   }) : super(key: key);
 
   final LatLng initialTarget;
@@ -108,8 +109,9 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
   // strings
   final String? selectText;
-  final bool? IsComeFromHome;
+  final String? IsComeFromHome;
   final String? outsideOfPickAreaText;
+  final String? address_ids;
 
   _searchByCameraLocation(PlaceProvider provider) async {
     // We don't want to search location again if camera location is changed by zooming in/out.
@@ -478,7 +480,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
                 style: TextStyle(fontSize: 12, fontFamily: Segoe_ui_semibold),
               ),
             ),
-            IsComeFromHome == false
+            IsComeFromHome != home
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -603,7 +605,11 @@ class GoogleMapPlacePicker extends StatelessWidget {
             SizedBox(height: 35),
             ProgressButton(
               child: Text(
-                IsComeFromHome == true ? SelectAddress : SaveAddress,
+                IsComeFromHome == home
+                    ? SelectAddress
+                    : IsComeFromHome == save
+                        ? SaveAddress
+                        : EditAddress,
                 style: TextStyle(
                   color: WhiteColor,
                   fontFamily: Segoe_ui_semibold,
@@ -611,7 +617,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                if (IsComeFromHome == false) {
+                if (IsComeFromHome != home) {
                   if (House.isEmpty) {
                     ShowToast(HouseOrFlatRequired, context);
                   } else if (Delivery_Type.isEmpty) {
@@ -771,10 +777,16 @@ class GoogleMapPlacePicker extends StatelessWidget {
     Params[latitude] = lat;
     Params[longitude] = lng;
     Params[landmark] = landMark;
+    if (address_ids.toString().isNotEmpty) {
+      Params[address_id] = address_ids;
+    }
+
     print("ParamsParamsParams${Params.toString()}");
     var ApiCalling = GetApiInstanceWithHeaders(header);
     Response response;
-    response = await ApiCalling.post(ADD_ADDRESS, data: Params);
+    response = await ApiCalling.post(
+        address_ids.toString().isNotEmpty ? UPDATE_ADDRESS : ADD_ADDRESS,
+        data: Params);
     print("SavingAddressresponseresponse${response.data.toString()}");
     ShowToast(response.data[MESSAGE], context);
     if (response.data[status]) {

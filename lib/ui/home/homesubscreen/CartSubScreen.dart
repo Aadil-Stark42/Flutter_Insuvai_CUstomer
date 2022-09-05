@@ -1,28 +1,17 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:insuvaicustomer/apiservice/EndPoints.dart';
 import 'package:insuvaicustomer/models/CartDataModel.dart';
 import 'package:insuvaicustomer/models/SlotsDataModel.dart';
 import 'package:insuvaicustomer/res/ResColor.dart';
-import 'package:insuvaicustomer/ui/order/OrderSummaryScreen.dart';
 import 'package:insuvaicustomer/utils/LocalStorageName.dart';
 import 'package:insuvaicustomer/utils/LowerCaseTextFormatter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../models/DashBoardDataModell.dart';
-import '../../../animationlist/src/animation_configuration.dart';
-import '../../../animationlist/src/animation_limiter.dart';
-import '../../../animationlist/src/fade_in_animation.dart';
-import '../../../animationlist/src/scale_animation.dart';
-import '../../../animationlist/src/slide_animation.dart';
 import '../../../apiservice/ApiService.dart';
 import '../../../apiservice/EndPoints.dart';
-import '../../../imageslider/carousel_slider.dart';
 import '../../../res/ResString.dart';
 import '../../../uicomponents/MyProgressBar.dart';
 import '../../../uicomponents/progress_button.dart';
@@ -182,6 +171,7 @@ class CartSubScreenState extends State<CartSubScreen> {
                                 InkWell(
                                   splashColor: GreyColor,
                                   onTap: () {
+                                    isClickCouponAplly = false;
                                     AddOrRemoveProduct(
                                         cartDataModel
                                             .products![index].cartProductId
@@ -209,6 +199,7 @@ class CartSubScreenState extends State<CartSubScreen> {
                                 InkWell(
                                   splashColor: GreyColor2,
                                   onTap: () {
+                                    isClickCouponAplly = false;
                                     AddOrRemoveProduct(
                                         cartDataModel
                                             .products![index].cartProductId
@@ -1244,13 +1235,10 @@ class CartSubScreenState extends State<CartSubScreen> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  width: 25,
-                                ),
+                                Spacer(),
                                 Text(
                                   "\'" + CouponValue.toUpperCase() + "\'",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: Segoe_ui_semibold,
                                     fontSize: 13,
@@ -1263,15 +1251,15 @@ class CartSubScreenState extends State<CartSubScreen> {
                                 ),
                                 Text(
                                   "applied",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: Segoe_ui_semibold,
                                     fontSize: 11,
                                     height: 1.0,
                                     color: GreyColor5,
                                   ),
-                                )
+
+                                ),
+                                Spacer(),
                               ],
                             ),
                             SizedBox(

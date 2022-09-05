@@ -1075,9 +1075,7 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  width: 25,
-                                ),
+                                Spacer(),
                                 Text(
                                   "\'" + CouponValue.toUpperCase() + "\'",
                                   maxLines: 1,
@@ -1102,7 +1100,8 @@ class OrderSummaryScreenState extends State<OrderSummaryScreen> {
                                     height: 1.0,
                                     color: GreyColor5,
                                   ),
-                                )
+                                ),
+                                Spacer(),
                               ],
                             ),
                             SizedBox(

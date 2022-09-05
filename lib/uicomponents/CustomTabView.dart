@@ -124,6 +124,7 @@ class _CustomTabsState extends State<CustomTabView>
             controller: controller,
             children: List.generate(
               widget.itemCount,
+
               (index) => widget.pageBuilder(context, index),
             ),
           ),

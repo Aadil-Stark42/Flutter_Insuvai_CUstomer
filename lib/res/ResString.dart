@@ -16,6 +16,7 @@ var ADD = "ADD";
 var APPLY = "APPLY";
 var CONTINUE = "Continue";
 var SaveAddress = "Save Address";
+var EditAddress = "Edit Address";
 var SaveDetails = "Save Details";
 var HouseOrFlatRequired = "House Or Flat Required";
 var SelectDeliveryType = "Select Delivery Type";
@@ -44,7 +45,7 @@ var STATUS = "status";
 var SelectAddress = "Select Address";
 var AddAddress = "Add Address";
 var Remove = "Remove";
-var EditAddress = "Edit Address";
+
 var Address = "Address";
 var Orders = "Orders";
 var About = "About";
@@ -138,6 +139,7 @@ var CashOnDelivery = "Cash On Delivery";
 var OnlinePayment = "Online Payment";
 var Submit = "Submit";
 var AreyouCancelOrder = "Are you sure to cancel order?";
+var AreYouRemoveAddress = "Are you sure to remove this address?";
 var ChangeProfile = "Change Profile";
 var TrackMyOrder = "Track My Order";
 var WaitingForConfirmation = "Waiting For Confirmation";
@@ -155,6 +157,9 @@ var Yourfeedbackwill =
     "Your feedback will help us improve delivery experience better.";
 var Confirmss = "Confirm";
 var selectYourLocation = "Select Your Location";
+var home = "home";
+var edit = "edit";
+var save = "save";
 /*--------------------*/
 
 /*Animation Tim*/

@@ -89,12 +89,14 @@ class MyHomeSubScreenState extends State<MyHomeSubScreen> {
 
     Response response;
     response = await ApiCalling.post(DASHBOARD, data: Params);
+
     setState(() {
       SelectedAddressType = prefs.getString(SELECTED_ADDDRESS_TYPE)!;
       SelectedAddress = prefs.getString(SELECTED_ADDDRESS)!;
 
       DashBoardData = DashBoardDataModel.fromJson(response.data);
       CHECKAPPSTATUS = DashBoardData.appStatus.toString();
+      print("DashBoardData.appStatus${DashBoardData.appStatus.toString()}");
       print("responseresponseresponse${response.data.toString()}");
       prefs.setString(
           TERMS_CONDITION, DashBoardData.termsAndConditions.toString());
@@ -890,7 +892,8 @@ class MyHomeSubScreenState extends State<MyHomeSubScreen> {
             GetDashBoardList();
           },
           selectInitialPosition: true,
-          IsComeFromHome: true,
+          address_id: "",
+          IsComeFromHome: home,
           initialPosition: LatLng(
               double.parse(prefs.getString(SELECTED_LATITUDE).toString()),
               double.parse(prefs.getString(SELECTED_LONGITUDE).toString())),

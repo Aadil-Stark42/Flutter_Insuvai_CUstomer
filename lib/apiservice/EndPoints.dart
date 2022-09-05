@@ -1,11 +1,15 @@
-var BASE_URL = 'https://live.insuvaiapp.com/api/v2/';
-// var BASE_URL = 'http://dev.gdigitaldelivery.com/api/v4/';
+var BASE_URL = 'http://live-insuvai.staging.gdigitaldelivery.com/api/v2/';
+// var BASE_URL = 'https://live.insuvaiapp.com/api/v2/';
+
 var MAP_API_KEY = "AIzaSyA-YiqHgS6yxhPcdH26m4nLZt3LOMcv2Ac";
 /*var MAP_API_KEY = "AIzaSyAxYuaYIxsp-27vfQcDAE8P-Ih_J4TRjOM";*/
 var LOGIN_API = "login";
 var VERIFICATION_OTP = "verify-otp";
 var ADDRESS_LIST = "address-list";
 var ADD_ADDRESS = "add-address";
+var UPDATE_ADDRESS = "update-address";
+var DELETE_ADDRESS = "delete-address";
+
 var DASHBOARD = "dashboard";
 var USER_UPDATE = "user-update";
 var CARTDATA = "cart-data";
